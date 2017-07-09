@@ -1,4 +1,9 @@
 from interpreter import Token, EOF
+from interpreter.exceptions import BaseInterpreterError
+
+
+class LexicalAnalizeError(BaseInterpreterError):
+    pass
 
 
 class Lexer(object):
@@ -32,7 +37,7 @@ class Lexer(object):
 
 
     def error(self):
-        raise SyntaxError('Invalid syntax at position {}'.format(self.position))
+        raise LexicalAnalizeError(self._expression, self.position)
 
 
     def parse_char(self, token):

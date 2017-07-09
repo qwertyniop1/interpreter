@@ -114,7 +114,9 @@ if __name__ == '__main__':
             lexer = SimpleLexer(expression)
             result = SimpleInterpreter(lexer).parse()
             print result
-        except SyntaxError:
-            print traceback.format_exc()
+        except SyntaxError as exc:
+            print 'Error! Line {}'.format(index)
+            print exc.text
+            print traceback.format_exc().splitlines()[-1]
 
         index += 1

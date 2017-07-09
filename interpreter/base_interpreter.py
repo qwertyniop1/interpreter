@@ -1,4 +1,9 @@
 from interpreter import Token, EOF
+from interpreter.exceptions import BaseInterpreterError
+
+
+class InterpreterError(BaseInterpreterError):
+    pass
 
 
 class Interpreter(object):
@@ -30,12 +35,13 @@ class Interpreter(object):
         try:
             return self.expression()
         except SyntaxError as error:
-            raise
-            # raise SyntaxError(error)
+            exception = SyntaxError(error)
+            exception.text = error.text
+            raise exception
 
 
     def error(self):
-        raise SyntaxError('Invalid syntax at position {}'.format(self.lexer.position))
+        raise InterpreterError(self.lexer._expression, self.lexer.position)
 
 
     def expression(self):
