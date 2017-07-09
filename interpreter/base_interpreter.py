@@ -2,38 +2,12 @@ from interpreter import Token, EOF
 
 
 class Interpreter(object):
-    def __init__(self, expression):
-        self._expression = expression
-        self.position = 0
+    def __init__(self, lexer):
+        self.lexer = lexer
         self.current_token = None
-        self.current_char = self._expression[self.position]
-
-
-    def next_char(self):
-        self.position += 1
-        if self.position >= len(self._expression):
-            self.current_char = None
-        else:
-            self.current_char = self._expression[self.position]
-
-
-    def next_token(self):
-        while self.current_char is not None:
-            if self.current_char.isspace():
-                self.next_char()
-                continue
-
-            parsed_token = self.parse_char(self.current_char)
-            if parsed_token:
-                return parsed_token
-
-            self.error()
-
-        return Token(EOF, None)
-
 
     def get(self, token_type):
-        self.current_token = self.next_token()
+        self.current_token = self.lexer.next_token()
 
         if self.current_token.token_type == token_type:
             return self.current_token
@@ -42,13 +16,13 @@ class Interpreter(object):
 
 
     def pick(self):
-        previous_position = self.position
-        previous_char = self.current_char
+        previous_position = self.lexer.position
+        previous_char = self.lexer.current_char
 
-        self.current_token = self.next_token()
+        self.current_token = self.lexer.next_token()
 
-        self.position = previous_position
-        self.current_char = previous_char
+        self.lexer.position = previous_position
+        self.lexer.current_char = previous_char
         return self.current_token
 
 
@@ -61,11 +35,7 @@ class Interpreter(object):
 
 
     def error(self):
-        raise SyntaxError('Invalid syntax at position {}'.format(self.position))
-
-
-    def parse_char(self, token):
-        raise NotImplementedError('Cannot execute method of base interpreter class')
+        raise SyntaxError('Invalid syntax at position {}'.format(self.lexer.position))
 
 
     def expression(self):
