@@ -19,9 +19,10 @@ if __name__ == '__main__':
             lexer = Lexer(expression)
             result = Interpreter(lexer).parse()
             print result
-        except SyntaxError as exc:
+        except Exception as exc:
             print 'Error! Line {}'.format(index)
-            print exc.text
+            if hasattr(exc, 'text'):
+                print exc.text
             print traceback.format_exc().splitlines()[-1]
 
         index += 1

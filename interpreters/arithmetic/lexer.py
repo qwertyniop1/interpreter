@@ -15,22 +15,20 @@ class ArithmeticLexer(Lexer):
 
     def parse_char(self, token):
         if token.isdigit():
-            return Token(tokens.INTEGER, self.integer())
-        if token == '+':
-            self.next_char()
-            return Token(tokens.PLUS, token)
-        if token == '-':
-            self.next_char()
-            return Token(tokens.MINUS, token)
-        if token == '*':
-            self.next_char()
-            return Token(tokens.ASTERIX, token)
-        if token == '/':
-            self.next_char()
-            return Token(tokens.SLASH, token)
-        if token == '(':
-            self.next_char()
-            return Token(tokens.OPEN_BRACKET, token)
-        if token == ')':
-            self.next_char()
-            return Token(tokens.CLOSE_BRACKET, token)
+            result = Token(tokens.INTEGER, self.integer())
+        else:
+            if token == '+':
+                result = Token(tokens.PLUS, token)
+            if token == '-':
+                result = Token(tokens.MINUS, token)
+            if token == '*':
+                result = Token(tokens.ASTERIX, token)
+            if token == '/':
+                result = Token(tokens.SLASH, token)
+            if token == '(':
+                result = Token(tokens.OPEN_BRACKET, token)
+            if token == ')':
+                result = Token(tokens.CLOSE_BRACKET, token)
+
+        self.next_char()
+        return result

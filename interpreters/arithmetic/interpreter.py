@@ -1,4 +1,4 @@
-from interpreters.core import Interpreter, Token
+from interpreters.core import Interpreter
 from interpreters.arithmetic import tokens
 
 
