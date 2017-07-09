@@ -1,5 +1,5 @@
-from interpreter import Token, EOF
-from interpreter.exceptions import BaseInterpreterError
+from interpreters.core import Token, EOF
+from interpreters.core.exceptions import BaseInterpreterError
 
 
 class LexicalAnalizeError(BaseInterpreterError):
