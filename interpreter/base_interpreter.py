@@ -6,20 +6,31 @@ class Interpreter(object):
         self._expression = expression
         self.position = 0
         self.current_token = None
+        self.current_char = self._expression[self.position]
+
+
+    def next_char(self):
+        self.position += 1
+        if self.position >= len(self._expression):
+            self.current_char = None
+        else:
+            self.current_char = self._expression[self.position]
 
 
     def next_token(self):
-        if self.position >= len(self._expression):
-            return Token(EOF, None)
+        while self.current_char is not None:
+            if self.current_char.isspace():
+                self.next_char()
+                continue
 
-        token = self._expression[self.position]
+            parsed_token = self.parse_token(self.current_char)
+            if parsed_token:
+                self.next_char()
+                return parsed_token
 
-        parsed_token = self.parse_token(token)
-        if parsed_token:
-            self.position += 1
-            return parsed_token
+            self.error()
 
-        self.error()
+        return Token(EOF, None)
 
 
     def get(self, token_type):
@@ -31,11 +42,19 @@ class Interpreter(object):
         self.error()
 
 
+    def pick(self):
+        self.current_token = self.next_token()
+        self.position -= 1
+        self.current_char = self._expression[self.position]
+        return self.current_token
+
+
     def parse(self):
         try:
             return self.expression()
         except SyntaxError as error:
-            raise SyntaxError(error)
+            raise
+            # raise SyntaxError(error)
 
 
     def error(self):

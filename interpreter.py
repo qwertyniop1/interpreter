@@ -2,6 +2,7 @@ from interpreter import Interpreter, Token
 
 INTEGER = 'INTEGER'
 PLUS = 'PLUS'
+MINUS = 'MINUS'
 
 class SimpleInterpreter(Interpreter):
     def parse_token(self, token):
@@ -9,13 +10,24 @@ class SimpleInterpreter(Interpreter):
             return Token(INTEGER, token)
         if token == '+':
             return Token(PLUS, token)
+        if token == '-':
+            return Token(MINUS, token)
 
     def expression(self):
-        left = self.get(INTEGER)
-        operator = self.get(PLUS)
-        right = self.get(INTEGER)
+        left = int(self.get(INTEGER).value)
+        operator = self.pick()
+        if operator.token_type == PLUS:
+            operator = self.get(PLUS)
+        else:
+            operator = self.get(MINUS)
+        right = int(self.get(INTEGER).value)
 
-        return int(left.value) + int(right.value)
+        if operator.token_type == PLUS:
+            result = left + right
+        elif operator.token_type == MINUS:
+            result = left - right
+
+        return result
 
 
 if __name__ == '__main__':
