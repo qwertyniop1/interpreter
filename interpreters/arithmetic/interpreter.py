@@ -1,9 +1,24 @@
+'''Arithmetic interpreter module.
+
+Provides `ArithmeticInterpreter` class.
+'''
 from interpreters.core import Interpreter
 from interpreters.arithmetic import tokens
 
 
 class ArithmeticInterpreter(Interpreter):
+    '''Arithmetic interpreter class.
+
+    Class that produce result from given arithmetic expression with the help
+    of `lexer`.
+
+    Attributes:
+        lexer(obj): `Lexer` instance.
+        current_token(obj): `Token` instance representing current processing
+            value.
+    '''
     def factor(self):
+        '''factor : INTEGER | LPAREN expr RPAREN'''
         if self.pick().token_type == tokens.OPEN_BRACKET:
             self.get(tokens.OPEN_BRACKET)
             result = self.expression()
@@ -16,6 +31,7 @@ class ArithmeticInterpreter(Interpreter):
 
 
     def term(self):
+        '''term : factor ((MUL | DIV) factor)*'''
         result = self.factor()
 
         while self.pick().token_type in (tokens.ASTERIX, tokens.SLASH):
@@ -36,6 +52,15 @@ class ArithmeticInterpreter(Interpreter):
 
 
     def expression(self):
+        '''Arithmetic expression parser / interpreter.
+
+        >  14 + 2 * 3 - 6 / 2
+        17
+
+        expr   : term ((PLUS | MINUS) term)*
+        term   : factor ((MUL | DIV) factor)*
+        factor : INTEGER
+        '''
         result = self.term()
 
         while self.pick().token_type in (tokens.PLUS, tokens.MINUS):
