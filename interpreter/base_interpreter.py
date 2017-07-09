@@ -23,9 +23,8 @@ class Interpreter(object):
                 self.next_char()
                 continue
 
-            parsed_token = self.parse_token(self.current_char)
+            parsed_token = self.parse_char(self.current_char)
             if parsed_token:
-                self.next_char()
                 return parsed_token
 
             self.error()
@@ -43,9 +42,13 @@ class Interpreter(object):
 
 
     def pick(self):
+        previous_position = self.position
+        previous_char = self.current_char
+
         self.current_token = self.next_token()
-        self.position -= 1
-        self.current_char = self._expression[self.position]
+
+        self.position = previous_position
+        self.current_char = previous_char
         return self.current_token
 
 
@@ -61,7 +64,7 @@ class Interpreter(object):
         raise SyntaxError('Invalid syntax at position {}'.format(self.position))
 
 
-    def parse_token(self, token):
+    def parse_char(self, token):
         raise NotImplementedError('Cannot execute method of base interpreter class')
 
 
