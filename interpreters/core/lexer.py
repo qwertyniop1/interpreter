@@ -8,6 +8,9 @@ class LexicalAnalizeError(BaseInterpreterError):
 
 class Lexer(object):
     def __init__(self, expression):
+        if not expression or not isinstance(expression, str):
+            raise AttributeError('Lexer expression should be non-empty string')
+
         self._expression = expression
         self.position = 0
         self.current_char = self._expression[self.position]
